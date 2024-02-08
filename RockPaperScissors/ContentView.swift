@@ -11,13 +11,15 @@ struct ContentView: View {
     let backgroundGradient = LinearGradient(
         colors: [Color.indigo, Color.white],
         startPoint: .top, endPoint: .bottom)
-    
     let moves = ["🪨", "📃", "✂️"]
-    @State var tryToWin = true
-    @State var selection = Int.random(in: 0...2)
-    @State var score = 0
+    
+    @State private var tryToWin = true
+    @State private var selection = Int.random(in: 0...2)
+    @State private var score = 0
     @State private var showingResult = false
+    @State private var showingFinalResult = false
     @State private var winOrLose = "Lose"
+    @State private var questionNumber = 0
     
     var body: some View {
         VStack {
@@ -65,20 +67,40 @@ struct ContentView: View {
         .tint(.indigo)
         .alert("Round Result:", isPresented: $showingResult) {
             Button("Next") {
-                resetGame()
+                resetTurn()
             }
         } message: {
             VStack {
                 Text("Your oponent chose the \(moves[selection]) \nYou \(winOrLose)")
             }
         }
+        .alert("Final Result:", isPresented: $showingFinalResult) {
+            Button("Play Again") {
+                resetGame()
+            }
+        } message: {
+            VStack {
+                Text("Your final score is \(score)")
+            }
+        }
     }
     
-    func resetGame() {
-        showingResult = true
+    func resetTurn() {
         tryToWin.toggle()
         selection = Int.random(in: 0...2)
         winOrLose = "Lose"
+        questionNumber += 1
+        
+        if questionNumber >= 10 {
+            showingFinalResult = true
+        }
+    }
+    
+    func resetGame() {
+        selection = Int.random(in: 0...2)
+        winOrLose = "Lose"
+        questionNumber = 0
+        score = 0
     }
 }
 
