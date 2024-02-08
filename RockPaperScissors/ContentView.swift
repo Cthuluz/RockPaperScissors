@@ -13,19 +13,34 @@ struct ContentView: View {
         startPoint: .top, endPoint: .bottom)
     let moves = ["🪨", "📃", "✂️"]
     
+    // Variable determines "Play to Win!" or "Play to Lose!" title
     @State private var tryToWin = true
+    
+    // Variable represents phone's rock paper scissors selection
     @State private var selection = Int.random(in: 0...2)
+    
+    // Variable to keep track of game score
     @State private var score = 0
+    
+    // Variables for showing alert messages
     @State private var showingResult = false
     @State private var showingFinalResult = false
+    
+    // Variable to determine if player has lost that turn
     @State private var winOrLose = "Lose"
+    
+    // Number of turns/questions asked
     @State private var questionNumber = 0
     
     var body: some View {
         VStack {
             VStack (spacing: 30) {
+                // Game title
                 Text(tryToWin == true ? "Play to Win!" : "Play to Lose!")
+                
+                // Following three buttons for the game showing rock, paper or scissors
                 Button("🪨") {
+                    // If you win when supposed to win or lose when supposed to lose, you win the turn
                     if (tryToWin == true && selection == 2) || (tryToWin == false && selection == 1) {
                         score += 1
                         winOrLose = "Win"
@@ -65,6 +80,8 @@ struct ContentView: View {
         .background(backgroundGradient)
         .foregroundStyle(.white)
         .tint(.indigo)
+        
+        // Alert shown after each round
         .alert("Round Result:", isPresented: $showingResult) {
             Button("Next") {
                 resetTurn()
@@ -74,6 +91,8 @@ struct ContentView: View {
                 Text("Your oponent chose the \(moves[selection]) \nYou \(winOrLose)")
             }
         }
+        
+        // Final score alert shown after 10 turns
         .alert("Final Result:", isPresented: $showingFinalResult) {
             Button("Play Again") {
                 resetGame()
@@ -85,6 +104,7 @@ struct ContentView: View {
         }
     }
     
+    // Function to reset variables between turns
     func resetTurn() {
         tryToWin.toggle()
         selection = Int.random(in: 0...2)
@@ -96,6 +116,7 @@ struct ContentView: View {
         }
     }
     
+    // Function to reset the whole game after 10 turns
     func resetGame() {
         selection = Int.random(in: 0...2)
         winOrLose = "Lose"
